@@ -45,3 +45,4 @@ yarn-error.*
 
 # Local config/credential notes
 docs/fb-config.txt
+docs/ow-api.txt
