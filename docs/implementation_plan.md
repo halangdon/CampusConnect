@@ -31,7 +31,7 @@
 | 2 | Notes / To-Do List | Basic | Done |
 | 3 | Announcements (static) | Basic | Done |
 | 4 | Campus Map | Basic | Done |
-| 5 | Login System | Advanced | Not Started |
+| 5 | Login System | Advanced | Done |
 | 6 | Online Database | Advanced | Not Started |
 | 7 | Internet Data / API | Advanced | Not Started |
 | D | Deployment | Deploy | Not Started |
@@ -107,7 +107,7 @@
 ---
 
 ### Phase 5 — Login System *(Advanced #1)*
-- **Status:** Not Started
+- **Status:** Done
 - **Commit:** `Phase 5: login system (Firebase Auth)`
 - **Covers:** "Login System" — Advanced Feature from assignment PDF
 - **What happens:**
