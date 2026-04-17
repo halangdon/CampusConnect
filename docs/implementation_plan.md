@@ -27,8 +27,8 @@
 | Phase | Feature | Type | Status |
 |---|---|---|---|
 | 0 | Project Setup | Setup | Done |
-| 1 | Class Schedule | Basic | Not Started |
-| 2 | Notes / To-Do List | Basic | Not Started |
+| 1 | Class Schedule | Basic | Done |
+| 2 | Notes / To-Do List | Basic | Done |
 | 3 | Announcements (static) | Basic | Not Started |
 | 4 | Campus Map | Basic | Not Started |
 | 5 | Login System | Advanced | Not Started |
@@ -59,18 +59,21 @@
 ---
 
 ### Phase 1 — Class Schedule
-- **Status:** Not Started
+- **Status:** Done
 - **Commit:** `Phase 1: class schedule screen`
-- **What happens:**
-  - `src/screens/ScheduleScreen.js` created
-  - Add/delete classes (subject, time, room)
-  - Data persisted with AsyncStorage
-  - Screen added to tab navigation
+- **What happened:**
+  - `src/screens/ScheduleScreen.js` created and updated with add/delete logic
+  - `src/screens/ScheduleScreen.js` created (231 lines)
+  - Add class via modal form: subject, time, room, day (Mon–Fri segmented selector)
+  - Delete class with confirmation dialog
+  - Classes grouped by day with styled day headers
+  - Data persisted with AsyncStorage (`@campusconnect_schedule`)
+  - Screen wired as first tab in `App.js` with `calendar-clock` icon
 
 ---
 
 ### Phase 2 — Notes / To-Do List
-- **Status:** Not Started
+- **Status:** Done
 - **Commit:** `Phase 2: notes and to-do screen`
 - **What happens:**
   - `src/screens/NotesScreen.js` created
