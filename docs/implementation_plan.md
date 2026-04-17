@@ -33,7 +33,7 @@
 | 4 | Campus Map | Basic | Done |
 | 5 | Login System | Advanced | Done |
 | 6 | Online Database | Advanced | Done |
-| 7 | Internet Data / API | Advanced | Not Started |
+| 7 | Internet Data / API | Advanced | Done |
 | D | Deployment | Deploy | Not Started |
 
 ---
@@ -132,7 +132,7 @@
 ---
 
 ### Phase 7 — Internet Data / API *(Advanced #3)*
-- **Status:** Not Started
+- **Status:** Done
 - **Commit:** `Phase 7: weather API widget`
 - **Covers:** "Internet Data (API)" — Advanced Feature from assignment PDF
 - **What happens:**
