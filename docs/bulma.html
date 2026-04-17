@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusConnect — Implementation Plan</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { font-size: 18px; }
+    body {
+      background: #f5f7fa;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      line-height: 1.75;
+      color: #2d3748;
+    }
+
+    /* Hero */
+    .hero.is-primary { background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); }
+    .hero-body { padding: 3rem 1.5rem; }
+
+    /* Page wrapper */
+    .page-content { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+
+    /* Cards */
+    .card { border-radius: 12px; box-shadow: 0 2px 14px rgba(0,0,0,0.07); margin-bottom: 1.5rem; overflow: hidden; }
+    .card-header { background: #f9fafb; border-radius: 12px 12px 0 0; display: flex; flex-wrap: wrap; align-items: center; }
+    .card-header-title {
+      font-size: 1rem; font-weight: 600; padding: 0.85rem 1rem;
+      flex: 1 1 0; min-width: 0; display: flex; align-items: center;
+      white-space: normal; word-break: break-word; gap: 0;
+    }
+    .card-header-icon { padding: 0.5rem 1rem 0.5rem 0; display: flex; align-items: center; flex-shrink: 0; }
+    .card-content { padding: 1.25rem; }
+
+    /* Phase badge */
+    .phase-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 2rem; height: 2rem; padding: 0 0.5rem;
+      border-radius: 999px; background-color: #1a73e8;
+      color: white; font-weight: 700; font-size: 0.8rem;
+      margin-right: 0.65rem; flex-shrink: 0;
+    }
+    .phase-badge.is-basic { background-color: #0d9488; }
+    .phase-badge.is-advanced { background-color: #7c3aed; }
+    .phase-badge.is-setup { background-color: #1a73e8; }
+    .phase-badge.is-deploy { background-color: #d97706; }
+
+    /* Badges row */
+    .badge-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+
+    /* Labels */
+    .section-label {
+      display: block; text-transform: uppercase; font-size: 0.68rem;
+      font-weight: 700; letter-spacing: 1.2px; color: #888; margin-bottom: 0.4rem;
+    }
+
+    /* Note / Info boxes */
+    .note-box {
+      background: #fffbea; border-left: 4px solid #f5c518;
+      border-radius: 0 8px 8px 0; padding: 0.85rem 1rem;
+      margin: 0.85rem 0; font-size: 0.95rem; line-height: 1.65;
+    }
+    .info-box {
+      background: #e8f0fe; border-left: 4px solid #1a73e8;
+      border-radius: 0 8px 8px 0; padding: 0.85rem 1rem;
+      margin: 0.85rem 0; font-size: 0.95rem; line-height: 1.65;
+    }
+    .success-box {
+      background: #f0fdf4; border-left: 4px solid #22c55e;
+      border-radius: 0 8px 8px 0; padding: 0.85rem 1rem;
+      margin: 0.85rem 0; font-size: 0.95rem; line-height: 1.65;
+    }
+
+    /* Code block */
+    .code-block {
+      background: #1e1e2e; color: #cdd6f4; border-radius: 8px;
+      padding: 1rem 1.1rem; font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.8rem; line-height: 1.75; margin: 0.6rem 0;
+      white-space: pre-wrap; word-break: break-all; overflow-wrap: anywhere;
+    }
+    .code-block .comment { color: #6c7086; }
+    .code-block .cmd { color: #89dceb; }
+    .code-block .val { color: #a6e3a1; }
+    .code-block .key { color: #cba6f7; }
+
+    /* Checklist */
+    .checklist { list-style: none; margin: 0; padding: 0; }
+    .checklist li {
+      display: flex; align-items: flex-start; padding: 0.55rem 0;
+      border-bottom: 1px solid #f0f0f0; font-size: 1rem; line-height: 1.65; gap: 0.65rem;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before { content: "→"; color: #1a73e8; flex-shrink: 0; font-weight: 700; margin-top: 0.05rem; }
+
+    /* Stack table — no horizontal scroll */
+    .stack-list { list-style: none; margin: 0; padding: 0; }
+    .stack-row {
+      display: flex; align-items: flex-start; padding: 0.65rem 0;
+      border-bottom: 1px solid #f0f0f0; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .stack-row:last-child { border-bottom: none; }
+    .stack-layer { font-weight: 700; font-size: 0.85rem; color: #1a73e8; min-width: 120px; flex-shrink: 0; }
+    .stack-tool { font-weight: 600; font-size: 0.95rem; min-width: 140px; flex-shrink: 0; }
+    .stack-why { font-size: 0.9rem; color: #555; flex: 1 1 180px; }
+
+    /* Deploy options grid */
+    .deploy-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .deploy-card {
+      border: 1px solid #e5e7eb; border-radius: 10px;
+      padding: 1rem; background: white;
+    }
+    .deploy-card .deploy-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .deploy-card .deploy-desc { font-size: 0.85rem; color: #555; line-height: 1.6; }
+
+    /* Grading table — stacked */
+    .grade-list { list-style: none; margin: 0; padding: 0; }
+    .grade-row {
+      display: flex; align-items: center; padding: 0.6rem 0;
+      border-bottom: 1px solid #f0f0f0; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .grade-row:last-child { border-bottom: none; }
+    .grade-pts {
+      min-width: 2.5rem; font-weight: 700; font-size: 1rem;
+      color: #1a73e8; text-align: right; flex-shrink: 0;
+    }
+    .grade-label { font-weight: 600; min-width: 140px; flex-shrink: 0; }
+    .grade-how { font-size: 0.9rem; color: #555; flex: 1 1 160px; }
+
+    /* Footer */
+    .footer-note { text-align: center; font-size: 0.83rem; color: #aaa; padding: 1.5rem 1rem 2.5rem; }
+
+    /* ── Mobile ── */
+    @media screen and (max-width: 640px) {
+      html { font-size: 17px; }
+      .hero-body { padding: 2rem 1rem; }
+      .hero .title { font-size: 1.6rem !important; }
+      .hero .subtitle { font-size: 0.95rem !important; }
+      .page-content { padding: 1.25rem 0.9rem 3rem; }
+      .card-header-title { font-size: 0.95rem; padding: 0.8rem 0.9rem 0.4rem; }
+      .card-header-icon { padding: 0 0.9rem 0.7rem; }
+      .card-content { padding: 1rem 0.9rem; }
+      .stack-layer { min-width: 90px; }
+      .stack-tool { min-width: 0; width: 100%; }
+      .deploy-grid { grid-template-columns: 1fr; }
+      .grade-label { min-width: 100px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero is-primary is-medium">
+  <div class="hero-body">
+    <div class="container">
+      <p class="title is-2 has-text-white">CampusConnect</p>
+      <p class="subtitle is-5 has-text-white" style="opacity:0.9;">
+        Implementation Plan — Step-by-Step Build Guide
+      </p>
+      <div class="tags mt-3">
+        <span class="tag is-white is-medium">React Native + Expo</span>
+        <span class="tag is-light is-medium">React Native Paper</span>
+        <span class="tag is-light is-medium">Firebase</span>
+        <span class="tag is-light is-medium">8 Phases</span>
+        <span class="tag is-light is-medium">School Project</span>
+      </div>
+      <p class="mt-4" style="color:rgba(255,255,255,0.8);">
+        Start here once all prerequisites are confirmed done.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="page-content">
+
+  <!-- ABOUT -->
+  <div class="info-box" style="margin-bottom:1.5rem;">
+    <strong>How to use this plan:</strong> Follow phases in order. Each phase ends with a git commit.
+    Do not start a new phase until the current one works and is committed.
+    Phases 1–4 are basic features (no internet needed). Phases 5–7 are advanced features added one at a time.
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="phase-badge is-setup">ST</span> Tech Stack
+      </p>
+    </div>
+    <div class="card-content">
+      <ul class="stack-list">
+        <li class="stack-row">
+          <span class="stack-layer">Framework</span>
+          <span class="stack-tool">React Native + Expo</span>
+          <span class="stack-why">JavaScript — no Android Studio, no Java. QR scan to run on phone. Code is readable for class presentations.</span>
+        </li>
+        <li class="stack-row">
+          <span class="stack-layer">UI</span>
+          <span class="stack-tool">React Native Paper</span>
+          <span class="stack-why">Material Design for mobile. MUI equivalent — same Google-style components (Card, Button, FAB, TextInput). Works on React Native, MUI does not.</span>
+        </li>
+        <li class="stack-row">
+          <span class="stack-layer">Navigation</span>
+          <span class="stack-tool">React Navigation</span>
+          <span class="stack-why">Industry standard. Tab navigation for main screens, stack navigation for login flow.</span>
+        </li>
+        <li class="stack-row">
+          <span class="stack-layer">Local Storage</span>
+          <span class="stack-tool">AsyncStorage</span>
+          <span class="stack-why">Phases 1–4 only. Saves data on-device. No internet required.</span>
+        </li>
+        <li class="stack-row">
+          <span class="stack-layer">Auth</span>
+          <span class="stack-tool">Firebase Auth</span>
+          <span class="stack-why">Email/password login. Free. 3 lines of code to sign in. Covers "Login System" grading criteria.</span>
+        </li>
+        <li class="stack-row">
+          <span class="stack-layer">Database</span>
+          <span class="stack-tool">Firebase Firestore</span>
+          <span class="stack-why">NoSQL cloud DB. Free Spark plan. One function call to save data. Covers "Online Database" grading criteria.</span>
+        </li>
+        <li class="stack-row">
+          <span class="stack-layer">API</span>
+          <span class="stack-tool">OpenWeatherMap</span>
+          <span class="stack-why">Free weather API. One fetch() call. Covers "Internet Data (API)" grading criteria. Easy to explain in a demo.</span>
+        </li>
+        <li class="stack-row">
+          <span class="stack-layer">Demo</span>
+          <span class="stack-tool">Expo Go + EAS Update</span>
+          <span class="stack-why">Publish free to Expo servers. Share a QR link — anyone scans and opens the app. No APK install needed.</span>
+        </li>
+        <li class="stack-row">
+          <span class="stack-layer">APK Build</span>
+          <span class="stack-tool">EAS Build</span>
+          <span class="stack-why">Builds .apk from GitHub in the cloud. Free (30 builds/month). No Android Studio needed.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FOLDER STRUCTURE -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="phase-badge is-setup">FS</span> Folder Structure
+      </p>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Create this structure after running <code>npx create-expo-app</code>. The <code>src/</code> folder is created manually.</p>
+      <div class="code-block"><span class="val">CampusConnect/</span>
+├── <span class="val">src/</span>
+│   ├── <span class="val">screens/</span>
+│   │   ├── <span class="key">ScheduleScreen.js</span>       <span class="comment">← Phase 1</span>
+│   │   ├── <span class="key">NotesScreen.js</span>          <span class="comment">← Phase 2</span>
+│   │   ├── <span class="key">AnnouncementsScreen.js</span>  <span class="comment">← Phase 3 (static) → Phase 6 (Firestore)</span>
+│   │   ├── <span class="key">MapScreen.js</span>            <span class="comment">← Phase 4</span>
+│   │   ├── <span class="key">LoginScreen.js</span>          <span class="comment">← Phase 5</span>
+│   │   └── <span class="key">RegisterScreen.js</span>       <span class="comment">← Phase 5</span>
+│   ├── <span class="val">components/</span>             <span class="comment">← reusable UI pieces go here</span>
+│   ├── <span class="val">services/</span>
+│   │   ├── <span class="key">firebase.js</span>             <span class="comment">← Firebase config (Phase 5)</span>
+│   │   └── <span class="key">weatherService.js</span>       <span class="comment">← OpenWeatherMap fetch (Phase 7)</span>
+│   └── <span class="key">theme.js</span>                <span class="comment">← shared colors</span>
+├── <span class="key">App.js</span>                      <span class="comment">← navigation lives here</span>
+└── <span class="key">app.json</span>                    <span class="comment">← app name, version, icons</span></div>
+    </div>
+  </div>
+
+  <!-- PACKAGE INSTALL -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="phase-badge is-setup">PKG</span> Package Installation (All at Once)
+      </p>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Run these in the terminal after creating the project. Install everything upfront so you don't have to stop mid-phase.</p>
+      <div class="code-block"><span class="comment"># Navigation</span>
+<span class="cmd">npm install @react-navigation/native @react-navigation/bottom-tabs @react-navigation/stack</span>
+
+<span class="comment"># UI + Screen support (required by React Navigation)</span>
+<span class="cmd">npm install react-native-paper react-native-safe-area-context react-native-screens</span>
+
+<span class="comment"># Local storage</span>
+<span class="cmd">npm install @react-native-async-storage/async-storage</span>
+
+<span class="comment"># Firebase (Auth + Firestore)</span>
+<span class="cmd">npm install firebase</span>
+
+<span class="comment"># Gesture handler (required by React Navigation)</span>
+<span class="cmd">npx expo install react-native-gesture-handler</span></div>
+      <div class="note-box">
+        Use <code>npx expo install</code> (not <code>npm install</code>) for packages that touch native code — Expo picks the compatible version automatically.
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────
+       PHASE 0
+  ───────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="phase-badge is-setup">0</span> Phase 0 — Project Setup
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-info is-light">Setup</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">You are in VS Code. Terminal is open. All prerequisites are done. Start here.</p>
+
+      <span class="section-label">Step 1 — Create the app</span>
+      <div class="code-block"><span class="cmd">npx create-expo-app CampusConnect --template blank</span>
+<span class="cmd">cd CampusConnect</span></div>
+
+      <span class="section-label">Step 2 — Install all packages</span>
+      <p class="mb-2" style="font-size:0.9rem; color:#555;">See Package Installation card above.</p>
+
+      <span class="section-label">Step 3 — Create folder structure</span>
+      <div class="code-block"><span class="comment"># In VS Code: right-click Explorer → New Folder</span>
+<span class="cmd">src/screens</span>
+<span class="cmd">src/components</span>
+<span class="cmd">src/services</span></div>
+
+      <span class="section-label">Step 4 — Create <code>src/theme.js</code></span>
+      <div class="code-block"><span class="key">export const</span> theme = {
+  colors: {
+    primary:    <span class="val">'#1a73e8'</span>,
+    background: <span class="val">'#f5f7fa'</span>,
+    surface:    <span class="val">'#ffffff'</span>,
+    text:       <span class="val">'#2d3748'</span>,
+    muted:      <span class="val">'#718096'</span>,
+  }
+};</div>
+
+      <span class="section-label">Step 5 — Run and verify</span>
+      <div class="code-block"><span class="cmd">npx expo start</span>
+<span class="comment"># Scan QR in Expo Go — blank app should appear on phone</span></div>
+
+      <span class="section-label">Step 6 — Push to GitHub</span>
+      <div class="code-block"><span class="cmd">git init</span>
+<span class="cmd">git add .</span>
+<span class="cmd">git commit -m "Phase 0: project init"</span>
+<span class="cmd">git remote add origin https://github.com/YOUR_USERNAME/campus-connect.git</span>
+<span class="cmd">git push -u origin main</span></div>
+
+      <div class="success-box">
+        <strong>Done when:</strong> App runs on phone via Expo Go. Folder structure exists. Code is pushed to GitHub.
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────
+       PHASE 1
+  ───────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="phase-badge is-basic">1</span> Phase 1 — Class Schedule
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-success is-light">Basic Feature</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">First basic feature. Shows your weekly class schedule. Data saved on-device — no internet needed.</p>
+      <ul class="checklist">
+        <li>Create <code>src/screens/ScheduleScreen.js</code></li>
+        <li>List classes grouped by day (Mon–Fri)</li>
+        <li>Add a class: subject name, time, room</li>
+        <li>Delete a class by tapping it</li>
+        <li>Save/load class list using AsyncStorage</li>
+        <li>Add ScheduleScreen to tab navigation in <code>App.js</code></li>
+      </ul>
+      <div class="code-block"><span class="comment"># Commit when done</span>
+<span class="cmd">git commit -m "Phase 1: class schedule screen"</span></div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────
+       PHASE 2
+  ───────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="phase-badge is-basic">2</span> Phase 2 — Notes / To-Do List
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-success is-light">Basic Feature</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Second basic feature. A simple personal notes and to-do list.</p>
+      <ul class="checklist">
+        <li>Create <code>src/screens/NotesScreen.js</code></li>
+        <li>List of notes/tasks with a checkbox</li>
+        <li>Add a note: type text → press add</li>
+        <li>Check off a note (strikethrough style)</li>
+        <li>Delete a note by long-pressing or swipe</li>
+        <li>Save/load notes using AsyncStorage</li>
+        <li>Add NotesScreen to tab navigation</li>
+      </ul>
+      <div class="code-block"><span class="cmd">git commit -m "Phase 2: notes and to-do screen"</span></div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────
+       PHASE 3
+  ───────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="phase-badge is-basic">3</span> Phase 3 — Announcements (Static)
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-success is-light">Basic Feature</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Third basic feature. Hardcoded announcements list for now. Will be replaced with live Firestore data in Phase 6.</p>
+      <ul class="checklist">
+        <li>Create <code>src/screens/AnnouncementsScreen.js</code></li>
+        <li>Hardcode 3–5 sample announcements as a JS array</li>
+        <li>Display each as a React Native Paper Card</li>
+        <li>Show title, date, and body text</li>
+        <li>Add AnnouncementsScreen to tab navigation</li>
+      </ul>
+      <div class="note-box">
+        Keep the data structure clean — use the same shape that Firestore will return in Phase 6 so the swap is easy.
+      </div>
+      <div class="code-block"><span class="cmd">git commit -m "Phase 3: announcements screen (static data)"</span></div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────
+       PHASE 4
+  ───────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="phase-badge is-basic">4</span> Phase 4 — Campus Map
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-success is-light">Basic Feature</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Fourth basic feature. A campus map screen — no API needed.</p>
+      <ul class="checklist">
+        <li>Create <code>src/screens/MapScreen.js</code></li>
+        <li>Option A: embed a static campus map image (<code>Image</code> component)</li>
+        <li>Option B: a "Open in Google Maps" button that deep-links to your campus location</li>
+        <li>Label key buildings (library, canteen, admin) if using static image</li>
+        <li>Add MapScreen to tab navigation</li>
+      </ul>
+      <div class="success-box">
+        <strong>Basic feature checkpoint:</strong> All 4 basic features done. App works fully offline. Test everything — navigation, add/delete, data persistence — before moving to Phase 5.
+      </div>
+      <div class="code-block"><span class="cmd">git commit -m "Phase 4: campus map screen"</span></div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────
+       PHASE 5
+  ───────────────────────────────────── -->
+  <div class="card" style="border: 2px solid #7c3aed;">
+    <div class="card-header" style="background: #f5f3ff;">
+      <p class="card-header-title">
+        <span class="phase-badge is-advanced">5</span> Phase 5 — Login System
+      </p>
+      <div class="card-header-icon">
+        <span class="tag" style="background:#ede9fe; color:#7c3aed; font-weight:600;">Advanced #1</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">First advanced feature. Users must log in to use the app. Powered by Firebase Auth.</p>
+
+      <span class="section-label">Step 1 — Create <code>src/services/firebase.js</code></span>
+      <div class="code-block"><span class="key">import</span> { initializeApp } <span class="key">from</span> <span class="val">'firebase/app'</span>;
+<span class="key">import</span> { getAuth } <span class="key">from</span> <span class="val">'firebase/auth'</span>;
+<span class="key">import</span> { getFirestore } <span class="key">from</span> <span class="val">'firebase/firestore'</span>;
+
+<span class="key">const</span> firebaseConfig = {
+  <span class="comment">// paste your config from Firebase Console here</span>
+};
+
+<span class="key">const</span> app  = initializeApp(firebaseConfig);
+<span class="key">export const</span> auth = getAuth(app);
+<span class="key">export const</span> db   = getFirestore(app);</div>
+
+      <span class="section-label">Step 2 — Build screens</span>
+      <ul class="checklist">
+        <li>Create <code>src/screens/LoginScreen.js</code> — email + password fields, Login button, link to Register</li>
+        <li>Create <code>src/screens/RegisterScreen.js</code> — same fields, Register button</li>
+        <li>Use <code>createUserWithEmailAndPassword</code> for register</li>
+        <li>Use <code>signInWithEmailAndPassword</code> for login</li>
+      </ul>
+
+      <span class="section-label">Step 3 — Lock navigation behind login</span>
+      <ul class="checklist">
+        <li>In <code>App.js</code>: use <code>onAuthStateChanged</code> to watch login state</li>
+        <li>If no user → show Login/Register stack</li>
+        <li>If user logged in → show main tab navigation</li>
+      </ul>
+
+      <div class="note-box">
+        Firebase config values are not secret on their own — they are safe to commit to GitHub for this project. For production apps you would use environment variables.
+      </div>
+      <div class="code-block"><span class="cmd">git commit -m "Phase 5: login system (Firebase Auth)"</span></div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────
+       PHASE 6
+  ───────────────────────────────────── -->
+  <div class="card" style="border: 2px solid #7c3aed;">
+    <div class="card-header" style="background: #f5f3ff;">
+      <p class="card-header-title">
+        <span class="phase-badge is-advanced">6</span> Phase 6 — Online Database
+      </p>
+      <div class="card-header-icon">
+        <span class="tag" style="background:#ede9fe; color:#7c3aed; font-weight:600;">Advanced #2</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Second advanced feature. Data moves from the device to Firestore in the cloud.</p>
+      <ul class="checklist">
+        <li><strong>Announcements:</strong> replace hardcoded array with a Firestore <code>announcements</code> collection. Any announcement added in the Firebase Console appears live in the app.</li>
+        <li><strong>Schedule:</strong> move from AsyncStorage → Firestore, stored under the logged-in user's UID (<code>users/{uid}/schedule</code>)</li>
+        <li><strong>Notes:</strong> same — move to Firestore under <code>users/{uid}/notes</code></li>
+        <li>Use <code>onSnapshot()</code> for live updates — data refreshes without pulling down to reload</li>
+      </ul>
+      <div class="info-box">
+        <strong>How user data isolation works:</strong> When a user logs in, Firebase gives them a unique <code>uid</code>. Their schedule and notes are saved under that uid in Firestore. Other users cannot see each other's data.
+      </div>
+      <div class="code-block"><span class="cmd">git commit -m "Phase 6: online database (Firestore)"</span></div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────
+       PHASE 7
+  ───────────────────────────────────── -->
+  <div class="card" style="border: 2px solid #7c3aed;">
+    <div class="card-header" style="background: #f5f3ff;">
+      <p class="card-header-title">
+        <span class="phase-badge is-advanced">7</span> Phase 7 — Internet Data / API
+      </p>
+      <div class="card-header-icon">
+        <span class="tag" style="background:#ede9fe; color:#7c3aed; font-weight:600;">Advanced #3</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Third advanced feature. Fetches live weather data from OpenWeatherMap and displays it on a home card.</p>
+
+      <span class="section-label">Step 1 — Create <code>src/services/weatherService.js</code></span>
+      <div class="code-block"><span class="key">const</span> API_KEY = <span class="val">'your_openweathermap_key'</span>;
+
+<span class="key">export async function</span> getWeather(city) {
+  <span class="key">const</span> res = <span class="key">await</span> fetch(
+    <span class="val">`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`</span>
+  );
+  <span class="key">return</span> res.json();
+}</div>
+
+      <span class="section-label">Step 2 — Add weather card to home/dashboard</span>
+      <ul class="checklist">
+        <li>Call <code>getWeather('your city')</code> on screen load with <code>useEffect</code></li>
+        <li>Display: city name, temperature, weather condition</li>
+        <li>Show a loading state while fetching</li>
+        <li>Use a React Native Paper Card for the widget</li>
+      </ul>
+
+      <div class="success-box">
+        <strong>All phases done:</strong> 4 basic features + 3 advanced features = 7 features total. Test the full app end-to-end before deploying.
+      </div>
+      <div class="code-block"><span class="cmd">git commit -m "Phase 7: weather API widget"</span></div>
+    </div>
+  </div>
+
+  <!-- DEPLOYMENT -->
+  <div class="card" style="border: 2px solid #d97706;">
+    <div class="card-header" style="background: #fffbeb;">
+      <p class="card-header-title" style="color:#92400e;">
+        <span class="phase-badge is-deploy">D</span> Deployment
+      </p>
+    </div>
+    <div class="card-content">
+
+      <div class="deploy-grid">
+        <div class="deploy-card">
+          <div class="deploy-title" style="color:#1a73e8;">Option 1 — Expo Go Live (Recommended)</div>
+          <div class="deploy-desc">
+            Publish to Expo servers. Share one QR link. Anyone with Expo Go scans and opens the app instantly.
+            Your laptop does not need to be on. <strong>Free.</strong>
+          </div>
+        </div>
+        <div class="deploy-card">
+          <div class="deploy-title" style="color:#0d9488;">Option 2 — EAS Build (APK)</div>
+          <div class="deploy-desc">
+            Builds a real <code>.apk</code> file from GitHub in the cloud. Classmates download and install it.
+            Free tier: 30 builds/month. No Android Studio needed. <strong>Free.</strong>
+          </div>
+        </div>
+        <div class="deploy-card">
+          <div class="deploy-title" style="color:#7c3aed;">Option 3 — GitHub Release + APK</div>
+          <div class="deploy-desc">
+            Attach the <code>.apk</code> from EAS Build to a GitHub Release tag. Clean, permanent download link from your repo. <strong>Free.</strong>
+          </div>
+        </div>
+      </div>
+
+      <span class="section-label mt-2">Deploy commands</span>
+      <div class="code-block"><span class="comment"># Option 1 — Expo Go QR link (instant, free)</span>
+<span class="cmd">npx expo login</span>
+<span class="cmd">eas update --branch main --message "v1.0 release"</span>
+
+<span class="comment"># Option 2 — Build APK (free, builds from GitHub)</span>
+<span class="cmd">npm install -g eas-cli</span>
+<span class="cmd">eas build:configure</span>
+<span class="cmd">eas build -p android --profile preview</span>
+
+<span class="comment"># After build: download .apk link from EAS dashboard
+# Option 3 — Attach .apk to GitHub Release
+# Repo → Releases → New Release → tag: v1.0 → attach .apk</span></div>
+
+      <div class="note-box">
+        Firebase (Auth + Firestore) is not "deployed" — it is already live in the cloud the moment you created the Firebase project. No extra steps needed.
+      </div>
+    </div>
+  </div>
+
+  <!-- GRADING -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="phase-badge is-setup">GR</span> Grading Criteria — How Each Point is Covered
+      </p>
+    </div>
+    <div class="card-content">
+      <ul class="grade-list">
+        <li class="grade-row">
+          <span class="grade-pts">30</span>
+          <span class="grade-label">App Functionality</span>
+          <span class="grade-how">7 working features across all phases. Login, data sync, live API, offline local features.</span>
+        </li>
+        <li class="grade-row">
+          <span class="grade-pts">20</span>
+          <span class="grade-label">Design (UI)</span>
+          <span class="grade-how">React Native Paper — Material Design. Consistent theme, tab navigation, card-based layouts.</span>
+        </li>
+        <li class="grade-row">
+          <span class="grade-pts">20</span>
+          <span class="grade-label">Features</span>
+          <span class="grade-how">Exceeds minimum. 4 basic (vs required 2) + 3 advanced (vs required 1).</span>
+        </li>
+        <li class="grade-row">
+          <span class="grade-pts">10</span>
+          <span class="grade-label">Creativity</span>
+          <span class="grade-how">Live weather widget on home screen. Polished dashboard. Per-user private data in Firestore.</span>
+        </li>
+        <li class="grade-row">
+          <span class="grade-pts">10</span>
+          <span class="grade-label">Documentation</span>
+          <span class="grade-how">This plan, prerequisites checklist, and GitHub README (written after project is done).</span>
+        </li>
+        <li class="grade-row">
+          <span class="grade-pts">10</span>
+          <span class="grade-label">Presentation</span>
+          <span class="grade-how">Live demo via Expo Go on real phone. QR scan in front of class. Firebase Console shows data in real time.</span>
+        </li>
+      </ul>
+      <div class="info-box" style="margin-bottom:0;">
+        <strong>Total: 100 pts.</strong> All criteria covered. GitHub README still needs to be written before final submission.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="footer-note">
+  CampusConnect — Smart Campus Mobile App &nbsp;·&nbsp; Implementation Plan &nbsp;·&nbsp; School Project
+</p>
+
+</body>
+</html>

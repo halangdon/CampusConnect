@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusConnect — Prerequisites</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Base ── */
+    html { font-size: 18px; }
+    body {
+      background-color: #f5f7fa;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      line-height: 1.75;
+      color: #2d3748;
+    }
+
+    /* ── Hero ── */
+    .hero.is-primary {
+      background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+    }
+    .hero-body { padding: 3rem 1.5rem; }
+
+    /* ── Page wrapper ── */
+    .page-content {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    /* ── Timeline note ── */
+    .timeline-note {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    /* ── Cards ── */
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .card-header {
+      background: #f9fafb;
+      border-radius: 12px 12px 0 0;
+      /* stack on mobile: defined in media query */
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0;
+    }
+    .card-header-title {
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.85rem 1rem;
+      flex: 1 1 0;
+      min-width: 0;           /* allows text to wrap instead of overflow */
+      display: flex;
+      align-items: center;
+      gap: 0;
+      white-space: normal;
+      word-break: break-word;
+    }
+    .card-header-icon {
+      padding: 0.5rem 1rem 0.5rem 0;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .card-content { padding: 1.25rem; }
+
+    /* ── Step circle ── */
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      min-width: 2rem;
+      border-radius: 50%;
+      background-color: #1a73e8;
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-right: 0.65rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Prereq tag ── */
+    .tag.is-prereq {
+      background-color: #e8f0fe;
+      color: #1a73e8;
+      font-weight: 600;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+
+    /* ── Checklist ── */
+    .checklist { list-style: none; margin: 0; padding: 0; }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 1rem;
+      line-height: 1.65;
+      gap: 0.65rem;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before {
+      content: "☐";
+      font-size: 1.05rem;
+      color: #1a73e8;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    /* ── Code block ── */
+    .code-block {
+      background: #1e1e2e;
+      color: #cdd6f4;
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.8rem;
+      line-height: 1.75;
+      margin: 0.6rem 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+      overflow-wrap: anywhere;
+    }
+    .code-block .comment { color: #6c7086; }
+    .code-block .cmd { color: #89dceb; }
+    .code-block .val { color: #a6e3a1; }
+
+    /* ── Note / Info boxes ── */
+    .note-box {
+      background: #fffbea;
+      border-left: 4px solid #f5c518;
+      border-radius: 0 8px 8px 0;
+      padding: 0.85rem 1rem;
+      margin: 0.85rem 0;
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+    .info-box {
+      background: #e8f0fe;
+      border-left: 4px solid #1a73e8;
+      border-radius: 0 8px 8px 0;
+      padding: 0.85rem 1rem;
+      margin: 0.85rem 0;
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      color: #888;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    /* ── Overview: stacked rows (no table) ── */
+    .overview-list { list-style: none; margin: 0; padding: 0; }
+    .overview-row {
+      display: flex;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .overview-row:last-child { border-bottom: none; }
+    .overview-num {
+      width: 1.6rem;
+      height: 1.6rem;
+      min-width: 1.6rem;
+      border-radius: 50%;
+      background: #e8f0fe;
+      color: #1a73e8;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .overview-name {
+      flex: 1 1 140px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      min-width: 0;
+    }
+    .overview-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+    .overview-where {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    /* ── Alt tools grid ── */
+    .alt-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .alt-item {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+    }
+
+    /* ── Final checklist two-col ── */
+    .final-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1.5rem;
+    }
+
+    /* ── Footer ── */
+    .footer-note {
+      text-align: center;
+      font-size: 0.83rem;
+      color: #aaa;
+      padding: 1.5rem 1rem 2.5rem;
+    }
+
+    /* ════════════════════════════════
+       Mobile — max 640px
+    ════════════════════════════════ */
+    @media screen and (max-width: 640px) {
+      html { font-size: 17px; }
+
+      .hero-body { padding: 2rem 1rem; }
+      .hero .title { font-size: 1.6rem !important; }
+      .hero .subtitle { font-size: 0.95rem !important; }
+
+      .page-content { padding: 1.25rem 0.9rem 3rem; }
+
+      /* card header: let tag drop below title on very small screens */
+      .card-header { align-items: flex-start; }
+      .card-header-title { font-size: 0.95rem; padding: 0.8rem 0.9rem 0.4rem; }
+      .card-header-icon { padding: 0 0.9rem 0.7rem; }
+
+      .card-content { padding: 1rem 0.9rem; }
+
+      /* alt tools: single column */
+      .alt-grid { grid-template-columns: 1fr; }
+
+      /* final checklist: single column */
+      .final-grid { grid-template-columns: 1fr; }
+
+      /* overview: keep flex but let meta wrap below name */
+      .overview-name { flex-basis: 100%; }
+      .overview-meta { padding-left: 2.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<section class="hero is-primary is-medium">
+  <div class="hero-body">
+    <div class="container">
+      <p class="title is-2 has-text-white">CampusConnect</p>
+      <p class="subtitle is-5 has-text-white" style="opacity:0.9;">
+        Smart Campus Mobile App — Prerequisites Checklist
+      </p>
+      <div class="tags mt-3">
+        <span class="tag is-white is-medium">School Project</span>
+        <span class="tag is-light is-medium">React Native + Expo</span>
+        <span class="tag is-light is-medium">Firebase</span>
+        <span class="tag is-light is-medium">OpenWeatherMap</span>
+        <span class="tag is-light is-medium">GitHub</span>
+      </div>
+      <p class="mt-4" style="color:rgba(255,255,255,0.8);">
+        Complete everything on this page <strong style="color:white;">before</strong> writing a single line of app code.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTENT ══ -->
+<div class="page-content">
+
+  <!-- Timeline note -->
+  <div class="timeline-note">
+    <span class="section-label">Note on Build Timeline</span>
+    <p>
+      This document covers <strong>setup only</strong>. The build log and implementation timeline
+      (phase-by-phase commits) will begin separately once all prerequisites below are confirmed done.
+      No app code is written yet.
+    </p>
+  </div>
+
+  <!-- WHY THIS STACK -->
+  <div class="card" style="border: 2px solid #1a73e8; margin-bottom: 2rem;">
+    <div class="card-header" style="background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);">
+      <p class="card-header-title" style="color: white;">
+        Why This Tech Stack — Reasoning
+      </p>
+    </div>
+    <div class="card-content">
+
+      <div class="info-box" style="margin-top:0;">
+        <strong>Context:</strong> This is a school project. The code will be presented to classmates and a teacher.
+        Every decision below prioritizes <strong>readability, simplicity, and ease of demo</strong> over advanced architecture.
+        You have more advanced setups available — this project is intentionally kept approachable.
+      </div>
+
+      <span class="section-label mt-4">Framework — React Native + Expo</span>
+      <p class="mb-3">
+        React Native uses <strong>JavaScript</strong> — a language most students already know.
+        Expo removes the need for Android Studio, Java, or any complex native setup.
+        Running the app is one command: <code>npx expo start</code>.
+        For the class demo, you scan a QR code and the app appears on a real phone instantly.
+        The code stays short and readable — a classmate can look at a screen file and understand what it does.
+      </p>
+
+      <span class="section-label">UI — React Native Paper (Material Design)</span>
+      <p class="mb-3">
+        MUI is the popular Material Design library for <strong>React web</strong> — it does not work on React Native.
+        React Native Paper is its direct equivalent for mobile: same Material Design style, same component names (Button, Card, FAB, TextInput),
+        same clean Google-like aesthetic you see on <strong>firebase.google.com</strong>.
+        Pre-built components mean less custom CSS and more time on actual features.
+      </p>
+
+      <span class="section-label">Auth + Database — Firebase (Auth + Firestore)</span>
+      <p class="mb-3">
+        Firebase requires no server to set up or maintain. Login is 3 lines of code.
+        Saving data to the cloud is one function call: <code>collection().add(data)</code>.
+        The free Spark plan covers everything this project needs — no credit card, no billing.
+        During the presentation you can show a user logging in and data appearing in the Firebase Console in real time.
+        That is a clear, visual proof of both "Login System" and "Online Database" from the grading criteria.
+      </p>
+
+      <span class="section-label">API — OpenWeatherMap</span>
+      <p class="mb-3">
+        A single free <code>fetch()</code> call returns live weather data for any city.
+        No complex setup, no paid tier needed. On the home screen it shows temperature and conditions —
+        a clear, visible demonstration of "Internet Data (API)" from the grading criteria.
+        Easy to point to during a presentation and explain in one sentence.
+      </p>
+
+      <span class="section-label">Deployment — Expo Go + EAS Update</span>
+      <p class="mb-3">
+        Publishing via <code>eas update</code> puts your app on Expo's servers for free.
+        Anyone with the Expo Go app scans one QR code and the app opens — no APK install, no Android Studio.
+        If a standalone APK is required, EAS Build generates one from your GitHub repo in the cloud.
+        Everything is free, everything starts from GitHub.
+      </p>
+
+      <div class="note-box" style="margin-bottom:0;">
+        <strong>Note (not planned yet):</strong> The PDF assignment also allows Android Studio (Java/Kotlin) and Flutter (Dart).
+        Both are valid tools — skipped here because they require heavier setup and use languages less familiar to most classmates.
+        See the "Alternative Tools" card below for details.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── OVERVIEW ── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="step-number">0</span> What You Need — Overview
+      </p>
+    </div>
+    <div class="card-content">
+      <ul class="overview-list">
+        <li class="overview-row">
+          <span class="overview-num">1</span>
+          <span class="overview-name">Node.js installed</span>
+          <span class="overview-meta">
+            <span class="overview-where">nodejs.org</span>
+            <span class="tag is-success is-light">Free</span>
+            <span class="tag is-warning is-light">To Do</span>
+          </span>
+        </li>
+        <li class="overview-row">
+          <span class="overview-num">2</span>
+          <span class="overview-name">Expo CLI installed</span>
+          <span class="overview-meta">
+            <span class="overview-where">Terminal / npm</span>
+            <span class="tag is-success is-light">Free</span>
+            <span class="tag is-warning is-light">To Do</span>
+          </span>
+        </li>
+        <li class="overview-row">
+          <span class="overview-num">3</span>
+          <span class="overview-name">Expo Go on phone</span>
+          <span class="overview-meta">
+            <span class="overview-where">Play Store / App Store</span>
+            <span class="tag is-success is-light">Free</span>
+            <span class="tag is-warning is-light">To Do</span>
+          </span>
+        </li>
+        <li class="overview-row">
+          <span class="overview-num">4</span>
+          <span class="overview-name">GitHub account + repo</span>
+          <span class="overview-meta">
+            <span class="overview-where">github.com</span>
+            <span class="tag is-success is-light">Free</span>
+            <span class="tag is-warning is-light">To Do</span>
+          </span>
+        </li>
+        <li class="overview-row">
+          <span class="overview-num">5</span>
+          <span class="overview-name">Firebase project</span>
+          <span class="overview-meta">
+            <span class="overview-where">firebase.google.com</span>
+            <span class="tag is-success is-light">Free</span>
+            <span class="tag is-warning is-light">To Do</span>
+          </span>
+        </li>
+        <li class="overview-row">
+          <span class="overview-num">6</span>
+          <span class="overview-name">Firebase Auth enabled</span>
+          <span class="overview-meta">
+            <span class="overview-where">Firebase Console</span>
+            <span class="tag is-success is-light">Free</span>
+            <span class="tag is-warning is-light">To Do</span>
+          </span>
+        </li>
+        <li class="overview-row">
+          <span class="overview-num">7</span>
+          <span class="overview-name">Firestore Database created</span>
+          <span class="overview-meta">
+            <span class="overview-where">Firebase Console</span>
+            <span class="tag is-success is-light">Free</span>
+            <span class="tag is-warning is-light">To Do</span>
+          </span>
+        </li>
+        <li class="overview-row">
+          <span class="overview-num">8</span>
+          <span class="overview-name">OpenWeatherMap API key</span>
+          <span class="overview-meta">
+            <span class="overview-where">openweathermap.org</span>
+            <span class="tag is-success is-light">Free</span>
+            <span class="tag is-warning is-light">To Do</span>
+          </span>
+        </li>
+        <li class="overview-row">
+          <span class="overview-num">9</span>
+          <span class="overview-name">Code editor (VS Code)</span>
+          <span class="overview-meta">
+            <span class="overview-where">code.visualstudio.com</span>
+            <span class="tag is-success is-light">Free</span>
+            <span class="tag is-warning is-light">To Do</span>
+          </span>
+        </li>
+      </ul>
+      <div class="note-box">
+        <strong>No credit card needed anywhere.</strong> Firebase Spark plan and OpenWeatherMap free tier are both fully free — no billing setup required.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 1: NODE.JS ── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="step-number">1</span> Install Node.js
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-prereq">nodejs.org</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Node.js is required to run Expo and install packages. Download the <strong>LTS version</strong>.</p>
+      <ul class="checklist">
+        <li>Go to <strong>nodejs.org</strong> and download the LTS installer</li>
+        <li>Run the installer — next → next → finish</li>
+        <li>Open a terminal and verify it works</li>
+      </ul>
+      <span class="section-label mt-4">Verify install</span>
+      <div class="code-block"><span class="cmd">node --version</span>
+<span class="comment"># Should print: v20.x.x or higher</span>
+
+<span class="cmd">npm --version</span>
+<span class="comment"># Should print: 10.x.x or higher</span></div>
+    </div>
+  </div>
+
+  <!-- ── 2: EXPO CLI ── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="step-number">2</span> Install Expo CLI
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-prereq">npm</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Expo lets you build React Native apps without Android Studio. One command does everything.</p>
+      <ul class="checklist">
+        <li>Open terminal (Command Prompt or PowerShell)</li>
+        <li>Run the install command below</li>
+        <li>Verify it works with the check command</li>
+      </ul>
+      <div class="code-block"><span class="comment"># Install Expo CLI globally</span>
+<span class="cmd">npm install -g expo-cli</span>
+
+<span class="comment"># Verify</span>
+<span class="cmd">expo --version</span></div>
+      <div class="info-box">
+        <strong>Why Expo?</strong> No Android Studio, no Java, no Gradle. Run one command, scan a QR code, and your app appears on your real phone. Perfect for class demos.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3: EXPO GO ── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="step-number">3</span> Install Expo Go on Your Phone
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-prereq">Play Store / App Store</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Expo Go runs your code on a real phone — no APK install needed. This is how you demo to your class.</p>
+      <ul class="checklist">
+        <li>Android: search <strong>"Expo Go"</strong> on Google Play Store → Install</li>
+        <li>iPhone: search <strong>"Expo Go"</strong> on Apple App Store → Install</li>
+        <li>Open the app once to confirm it works</li>
+      </ul>
+      <div class="note-box">
+        During development your phone and laptop must be on the <strong>same Wi-Fi network</strong> to scan the QR code.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4: GITHUB ── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="step-number">4</span> GitHub — Account + Repository
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-prereq">github.com</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">All code lives here. Deployment (EAS Build) also reads from GitHub.</p>
+      <ul class="checklist">
+        <li>Create a free account at <strong>github.com</strong> if you don't have one</li>
+        <li>Create a new repository named <strong>campus-connect</strong></li>
+        <li>Set visibility to <strong>Public</strong> — teacher can see the code</li>
+        <li>Do <strong>not</strong> initialize with a README yet — Expo creates the structure</li>
+        <li>Copy the repo URL — needed when pushing the first commit</li>
+      </ul>
+      <span class="section-label mt-4">Git setup (first time only)</span>
+      <div class="code-block"><span class="cmd">git config --global user.name "Your Name"</span>
+<span class="cmd">git config --global user.email "your@email.com"</span></div>
+    </div>
+  </div>
+
+  <!-- ── 5: FIREBASE PROJECT ── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="step-number">5</span> Firebase — Create a Project
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-prereq">firebase.google.com</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Firebase gives you a free login system and free cloud database. Only needs a Google account.</p>
+      <ul class="checklist">
+        <li>Go to <strong>firebase.google.com</strong></li>
+        <li>Click <strong>"Get Started"</strong> → sign in with Google</li>
+        <li>Click <strong>"Create a project"</strong></li>
+        <li>Name it: <strong>campus-connect</strong></li>
+        <li>Google Analytics: <strong>disable it</strong> — not needed</li>
+        <li>Click <strong>"Create project"</strong> → wait → Continue</li>
+      </ul>
+      <div class="info-box">
+        <strong>Spark Plan = Free Forever.</strong> No credit card, no billing. Supports 50,000 database reads/day and 10 simultaneous users — more than enough for a school demo.
+      </div>
+      <span class="section-label mt-4">Register your app with Firebase</span>
+      <ul class="checklist">
+        <li>Inside your project click the <strong>&lt;/&gt; (Web)</strong> icon</li>
+        <li>App nickname: <strong>CampusConnect</strong></li>
+        <li>Do <strong>not</strong> enable Firebase Hosting</li>
+        <li>Click <strong>Register app</strong></li>
+        <li><strong>Save the firebaseConfig object</strong> — paste it into the app in Phase 5</li>
+      </ul>
+      <div class="note-box">
+        The config will look like this — save it to a text file for now:
+        <div class="code-block mt-2"><span class="comment">// Save this — needed in Phase 5</span>
+const firebaseConfig = {
+  apiKey: <span class="val">"your-api-key"</span>,
+  authDomain: <span class="val">"campus-connect.firebaseapp.com"</span>,
+  projectId: <span class="val">"campus-connect"</span>,
+  storageBucket: <span class="val">"campus-connect.appspot.com"</span>,
+  messagingSenderId: <span class="val">"123456789"</span>,
+  appId: <span class="val">"1:123456789:web:abc123"</span>
+};</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6: FIREBASE AUTH ── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="step-number">6</span> Firebase Auth — Enable Email/Password Login
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-prereq">Firebase Console</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Powers the Login screen in Phase 5. Takes about 30 seconds to enable.</p>
+      <ul class="checklist">
+        <li>Firebase Console → left sidebar → <strong>Build → Authentication</strong></li>
+        <li>Click <strong>"Get started"</strong></li>
+        <li>Under <strong>Sign-in method</strong> tab → click <strong>Email/Password</strong></li>
+        <li>Toggle the first switch to <strong>Enable</strong></li>
+        <li>Click <strong>Save</strong></li>
+      </ul>
+      <div class="info-box">
+        Email/Password is enough — no need for Google Sign-In or phone auth. Simplest to explain in a presentation.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 7: FIRESTORE ── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="step-number">7</span> Firestore — Create the Database
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-prereq">Firebase Console</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Firestore is the online database used in Phase 6 — stores announcements, schedules, and notes in the cloud.</p>
+      <ul class="checklist">
+        <li>Firebase Console → left sidebar → <strong>Build → Firestore Database</strong></li>
+        <li>Click <strong>"Create database"</strong></li>
+        <li>Choose <strong>Start in test mode</strong> — allows read/write during development</li>
+        <li>Location: pick the closest region — e.g. <strong>asia-southeast1</strong> for Philippines</li>
+        <li>Click <strong>Enable</strong></li>
+      </ul>
+      <div class="note-box">
+        <strong>Test mode</strong> allows anyone to read/write for 30 days. That is fine for a school demo — security rules can be tightened later.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 8: OPENWEATHERMAP ── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="step-number">8</span> OpenWeatherMap — Get a Free API Key
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-prereq">openweathermap.org</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">Used in Phase 7 to show live weather on the home screen. Covers the "Internet Data (API)" grading criteria.</p>
+      <ul class="checklist">
+        <li>Go to <strong>openweathermap.org</strong> → <strong>Sign In → Create an Account</strong></li>
+        <li>Verify your email</li>
+        <li>Go to your profile → <strong>My API keys</strong></li>
+        <li>Copy the default key — looks like: <code>a1b2c3d4e5f6...</code></li>
+        <li>Save the key in a text file for later</li>
+      </ul>
+      <div class="note-box">
+        <strong>Wait up to 2 hours</strong> after creating an account before the key becomes active. Do this step early.
+      </div>
+      <span class="section-label mt-4">Test your key — paste this in a browser (replace YOUR_KEY)</span>
+      <div class="code-block">https://api.openweathermap.org/data/2.5/weather?q=Manila&appid=YOUR_KEY&units=metric</div>
+      <p class="mt-2" style="font-size:0.9rem; color:#555;">If you see JSON with temperature info → key is working.</p>
+    </div>
+  </div>
+
+  <!-- ── 9: VS CODE ── -->
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">
+        <span class="step-number">9</span> VS Code — Code Editor
+      </p>
+      <div class="card-header-icon">
+        <span class="tag is-prereq">code.visualstudio.com</span>
+      </div>
+    </div>
+    <div class="card-content">
+      <p class="mb-3">The editor you'll write code in. Free from Microsoft.</p>
+      <ul class="checklist">
+        <li>Download from <strong>code.visualstudio.com</strong> → install</li>
+        <li>Install extension: <strong>ES7+ React/Redux/React-Native snippets</strong></li>
+        <li>Install extension: <strong>Prettier - Code formatter</strong></li>
+        <li>Optional: <strong>React Native Tools</strong> by Microsoft</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── ALTERNATIVES (noted, not planned) ── -->
+  <div class="card" style="border: 2px dashed #ddd;">
+    <div class="card-header" style="background:#fafafa;">
+      <p class="card-header-title has-text-grey">
+        Noted: Alternative Tools (Not Planned Yet)
+      </p>
+    </div>
+    <div class="card-content">
+      <p class="mb-3" style="color:#666; font-size:0.95rem;">
+        The PDF assignment allows these tools. Noted here for reference — no plans to switch unless decided later.
+      </p>
+      <div class="alt-grid">
+        <div class="alt-item">
+          <span class="section-label">Android Studio</span>
+          <p style="font-size:0.9rem; color:#555; margin:0;">Uses Java or Kotlin. Heavy setup — JDK, SDK manager, emulator config. Harder to present to classmates. Valid for a fully native APK.</p>
+        </div>
+        <div class="alt-item">
+          <span class="section-label">Flutter</span>
+          <p style="font-size:0.9rem; color:#555; margin:0;">Uses Dart language. Great performance and UI. Also requires Android Studio setup. Dart is less familiar to most students than JavaScript.</p>
+        </div>
+      </div>
+      <div class="info-box">
+        <strong>Why React Native + Expo instead:</strong> JavaScript-based (most students know it), no Android Studio needed, demo by scanning a QR code on any phone, and the code is short and readable enough to walk classmates through.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FINAL CHECKLIST ── -->
+  <div class="card" style="border: 2px solid #1a73e8;">
+    <div class="card-header" style="background:#e8f0fe;">
+      <p class="card-header-title" style="color:#1a73e8;">
+        Ready to Build? Final Confirmation Checklist
+      </p>
+    </div>
+    <div class="card-content">
+      <p class="mb-4">Check all 10 of these before giving the go signal to start Phase 0.</p>
+      <div class="final-grid">
+        <ul class="checklist">
+          <li>Node.js installed and verified</li>
+          <li>Expo CLI installed and verified</li>
+          <li>Expo Go on phone — tested, opens fine</li>
+          <li>GitHub repo created (campus-connect)</li>
+          <li>Git configured (name + email)</li>
+        </ul>
+        <ul class="checklist">
+          <li>Firebase project created</li>
+          <li>Firebase app registered + config saved</li>
+          <li>Firebase Auth (Email/Password) enabled</li>
+          <li>Firestore database created (test mode)</li>
+          <li>OpenWeatherMap API key saved + tested</li>
+        </ul>
+      </div>
+      <div class="note-box mt-4">
+        Once all 10 boxes above are done → say <strong>"go"</strong> and the build timeline starts from Phase 0.
+      </div>
+    </div>
+  </div>
+
+</div><!-- end page-content -->
+
+<p class="footer-note">
+  CampusConnect — Smart Campus Mobile App &nbsp;·&nbsp; School Project &nbsp;·&nbsp; Prerequisites Doc
+</p>
+
+</body>
+</html>
