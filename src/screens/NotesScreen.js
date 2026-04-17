@@ -1,33 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { Text, Portal, Modal, TextInput, Card, IconButton, Checkbox, Button } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { auth, db } from '../services/firebase';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { theme } from '../theme';
-
-const STORAGE_KEY = '@campusconnect_notes';
 
 export default function NotesScreen() {
   const [notes, setNotes] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [newNoteText, setNewNoteText] = useState('');
 
-  useEffect(() => {
-    loadNotes();
-  }, []);
+  const user = auth.currentUser;
 
-  const loadNotes = async () => {
-    try {
-      const storedData = await AsyncStorage.getItem(STORAGE_KEY);
-      if (storedData) setNotes(JSON.parse(storedData));
-    } catch (e) {
-      console.error('Failed to load notes', e);
-    }
-  };
+  useEffect(() => {
+    if (!user) return;
+    const userDocRef = doc(db, 'users', user.uid);
+    const unsubscribe = onSnapshot(userDocRef, (snapshot) => {
+      if (snapshot.exists() && snapshot.data().notes) {
+        setNotes(snapshot.data().notes);
+      } else {
+        setNotes([]);
+      }
+    });
+    return unsubscribe;
+  }, [user]);
 
   const saveNotes = async (newNotes) => {
     try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newNotes));
-      setNotes(newNotes);
+      if (!user) return;
+      const userDocRef = doc(db, 'users', user.uid);
+      await setDoc(userDocRef, { notes: newNotes }, { merge: true });
     } catch (e) {
       console.error('Failed to save notes', e);
     }

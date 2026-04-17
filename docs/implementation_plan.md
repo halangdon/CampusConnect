@@ -32,7 +32,7 @@
 | 3 | Announcements (static) | Basic | Done |
 | 4 | Campus Map | Basic | Done |
 | 5 | Login System | Advanced | Done |
-| 6 | Online Database | Advanced | Not Started |
+| 6 | Online Database | Advanced | Done |
 | 7 | Internet Data / API | Advanced | Not Started |
 | D | Deployment | Deploy | Not Started |
 
@@ -120,7 +120,7 @@
 ---
 
 ### Phase 6 — Online Database *(Advanced #2)*
-- **Status:** Not Started
+- **Status:** Done
 - **Commit:** `Phase 6: online database (Firestore)`
 - **Covers:** "Online Database" — Advanced Feature from assignment PDF
 - **What happens:**

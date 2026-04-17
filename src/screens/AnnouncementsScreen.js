@@ -1,55 +1,66 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { Text, Card } from 'react-native-paper';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from '../services/firebase';
 import { theme } from '../theme';
 
-const STATIC_ANNOUNCEMENTS = [
-  {
-    id: '1',
-    title: 'Welcome to CampusConnect!',
-    date: 'August 28, 2026',
-    body: 'We are thrilled to launch the new CampusConnect app. Explore the features and start organizing your school life today.',
-  },
-  {
-    id: '2',
-    title: 'Midterm Schedules Posted',
-    date: 'September 5, 2026',
-    body: 'Please check your portal for the updated midterm examination schedules. Make sure to note any room reassignments.',
-  },
-  {
-    id: '3',
-    title: 'Campus Wi-Fi Maintenance',
-    date: 'September 12, 2026',
-    body: 'The IT department will be conducting scheduled maintenance on the campus Wi-Fi network this Saturday from 12:00 AM to 4:00 AM.',
-  },
-  {
-    id: '4',
-    title: 'Library Extended Hours',
-    date: 'September 18, 2026',
-    body: 'To support students during midterms, the main library will remain open until 11:00 PM on weekdays.',
-  }
-];
-
 export default function AnnouncementsScreen() {
+  const [announcements, setAnnouncements] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // If the collection doesn't exist, this will just return empty.
+    const q = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setAnnouncements(data);
+      setLoading(false);
+    }, (error) => {
+      console.error('Error fetching announcements:', error);
+      // Wait, if no index exists or permission denied, it will throw. 
+      // The app will just show an empty list or console.error.
+      setLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-        {STATIC_ANNOUNCEMENTS.map((announcement) => (
-          <Card key={announcement.id} style={styles.card} mode="elevated">
-            <Card.Content>
-              <Text variant="titleMedium" style={styles.cardTitle}>
-                {announcement.title}
-              </Text>
-              <Text variant="labelSmall" style={styles.cardDate}>
-                {announcement.date}
-              </Text>
-              <Text variant="bodyMedium" style={styles.cardBody}>
-                {announcement.body}
-              </Text>
-            </Card.Content>
-          </Card>
-        ))}
-      </ScrollView>
+      {loading ? (
+        <View style={styles.center}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </View>
+      ) : (
+        <ScrollView contentContainerStyle={styles.content}>
+          {announcements.length === 0 ? (
+            <Text style={{ textAlign: 'center', marginTop: 20, color: theme.colors.muted }}>
+              No announcements at the moment. Add some in Firebase Console!
+            </Text>
+          ) : (
+            announcements.map((announcement) => (
+              <Card key={announcement.id} style={styles.card} mode="elevated">
+                <Card.Content>
+                  <Text variant="titleMedium" style={styles.cardTitle}>
+                    {announcement.title}
+                  </Text>
+                  <Text variant="labelSmall" style={styles.cardDate}>
+                    {announcement.date}
+                  </Text>
+                  <Text variant="bodyMedium" style={styles.cardBody}>
+                    {announcement.body}
+                  </Text>
+                </Card.Content>
+              </Card>
+            ))
+          )}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -58,6 +69,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   content: {
     padding: theme.spacing.medium,

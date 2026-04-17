@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Text, FAB, Portal, Modal, TextInput, Button, Card, IconButton, Chip } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { auth, db } from '../services/firebase';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { theme } from '../theme';
 
-const STORAGE_KEY = '@campusconnect_schedule';
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export default function ScheduleScreen() {
@@ -17,23 +17,26 @@ export default function ScheduleScreen() {
   const [room, setRoom] = useState('');
   const [selectedDays, setSelectedDays] = useState(['Mon']);
 
-  useEffect(() => {
-    loadSchedule();
-  }, []);
+  const user = auth.currentUser;
 
-  const loadSchedule = async () => {
-    try {
-      const storedData = await AsyncStorage.getItem(STORAGE_KEY);
-      if (storedData) setSchedule(JSON.parse(storedData));
-    } catch (e) {
-      console.error('Failed to load schedule', e);
-    }
-  };
+  useEffect(() => {
+    if (!user) return;
+    const userDocRef = doc(db, 'users', user.uid);
+    const unsubscribe = onSnapshot(userDocRef, (snapshot) => {
+      if (snapshot.exists() && snapshot.data().schedule) {
+        setSchedule(snapshot.data().schedule);
+      } else {
+        setSchedule([]);
+      }
+    });
+    return unsubscribe;
+  }, [user]);
 
   const saveSchedule = async (newSchedule) => {
     try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newSchedule));
-      setSchedule(newSchedule);
+      if (!user) return;
+      const userDocRef = doc(db, 'users', user.uid);
+      await setDoc(userDocRef, { schedule: newSchedule }, { merge: true });
     } catch (e) {
       console.error('Failed to save schedule', e);
     }
