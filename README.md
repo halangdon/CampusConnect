@@ -91,6 +91,8 @@ campus-connect/
 
 ---
 
-> **Project Developer:** Junlee Marc M Pepito  
+> **Project Developer:** Junlee Marc M Pepito
+
 > **Course:** App Dev Yr 2
-> (c) 2026 | junl.ee
+
+> **(c) 2026 | junl.ee**
