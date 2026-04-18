@@ -1,9 +1,9 @@
-const API_KEY = 'your_openweathermap_key';
+const API_KEY = 'dd7baae2e0d1fb0b090a64a83e048dbb';
 
 export async function getWeather(city) {
   try {
     const res = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?q=Mandaue&appid=${API_KEY}&units=metric`
     );
     if (!res.ok) throw new Error('API request failed');
     return await res.json();

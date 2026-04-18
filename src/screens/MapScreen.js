@@ -5,8 +5,7 @@ import { theme } from '../theme';
 
 export default function MapScreen() {
   const openMaps = () => {
-    // You can replace the query with the actual campus name or coordinates
-    Linking.openURL('https://maps.google.com/?q=University+Campus');
+    Linking.openURL('https://maps.google.com/?q=Informatics+College+Consolacion');
   };
 
   return (
@@ -18,7 +17,10 @@ export default function MapScreen() {
           <Card.Content style={styles.cardContent}>
             <Text variant="titleMedium" style={styles.subtitle}>Open in Navigation App</Text>
             <Text variant="bodyMedium" style={styles.cardText}>
-              Get detailed directions, find parking, and navigate around the campus using Google Maps.
+              Get detailed directions to Informatics College Consolacion using Google Maps. 
+            </Text>
+            <Text variant="bodySmall" style={styles.noteText}>
+              Note: The Google Maps pin is slightly inaccurate. The campus is located right beside Paengs Chicken Consolacion.
             </Text>
             <Button 
               icon="map-search" 
@@ -36,22 +38,22 @@ export default function MapScreen() {
         <Card mode="outlined" style={styles.listCard}>
           <List.Item
             title="Main Library"
-            description="North Wing, Building A"
-            left={props => <List.Icon {...props} icon="book-open-var" color={theme.colors.primary} />}
+            description="Building A"
+            left={props => <List.Icon {...props} icon="book-open-variant" color={theme.colors.primary} />}
           />
           <List.Item
             title="Student Canteen"
-            description="Central Plaza"
+            description="Building A"
             left={props => <List.Icon {...props} icon="food" color="#d97706" />}
           />
           <List.Item
             title="Admin Office"
-            description="South Wing, Ground Floor"
+            description="Building A"
             left={props => <List.Icon {...props} icon="office-building" color="#7c3aed" />}
           />
           <List.Item
             title="IT Department"
-            description="Tech Hub, 3rd Floor"
+            description="Building A"
             left={props => <List.Icon {...props} icon="laptop" color="#0d9488" />}
           />
         </Card>
@@ -89,8 +91,14 @@ const styles = StyleSheet.create({
   },
   cardText: {
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 8,
     color: theme.colors.text,
+  },
+  noteText: {
+    textAlign: 'center',
+    marginBottom: 16,
+    color: theme.colors.error,
+    fontWeight: 'bold',
   },
   button: {
     width: '100%',

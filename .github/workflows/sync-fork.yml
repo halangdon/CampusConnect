@@ -1,0 +1,21 @@
+name: Sync Fork
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    name: Sync to fork
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to fork
+        run: |
+          git remote add fork https://x-access-token:${{ secrets.FORK_TOKEN }}@github.com/retromatter/CampusConnect.git
+          git push fork main --force
