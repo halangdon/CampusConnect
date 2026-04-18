@@ -2,6 +2,9 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
+// Firebase web API keys are safe to expose in client-side code.
+// Security is enforced via Firebase Auth and Firestore Rules, not this key.
+// See: https://firebase.google.com/docs/projects/api-keys
 const firebaseConfig = {
   apiKey: "AIzaSyDgmmng_NtAlIFA0crvixewSWZQQNtN9Uk",
   authDomain: "campus-connect-41ba2.firebaseapp.com",
