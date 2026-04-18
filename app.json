@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "scma",
+    "name": "CampusConnect",
     "slug": "scma",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,17 +13,33 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.halangdon.scma",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.halangdon.scma"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "032697b0-ae5d-4948-8ca1-c41c1cc68dbc"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/032697b0-ae5d-4948-8ca1-c41c1cc68dbc"
     }
   }
 }
