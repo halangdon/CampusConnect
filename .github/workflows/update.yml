@@ -8,6 +8,7 @@ on:
 jobs:
   update:
     name: EAS Update
+    if: github.repository == 'halangdon/CampusConnect'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
