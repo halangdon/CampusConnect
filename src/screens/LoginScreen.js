@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { Text, TextInput, Button, Card, IconButton, Portal, Modal } from 'react-native-paper';
+import { Text, TextInput, Button, Card, IconButton, Portal, Modal, Checkbox } from 'react-native-paper';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { theme } from '../theme';
@@ -11,6 +11,7 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isInfoVisible, setIsInfoVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -67,11 +68,22 @@ export default function LoginScreen({ navigation }) {
               value={password}
               onChangeText={setPassword}
               mode="outlined"
-              secureTextEntry
+              secureTextEntry={!showPassword}
               style={styles.input}
               activeOutlineColor={theme.colors.primary}
             />
-            
+
+            <View style={styles.checkboxRow}>
+              <Checkbox
+                status={showPassword ? 'checked' : 'unchecked'}
+                onPress={() => setShowPassword(!showPassword)}
+                color={theme.colors.primary}
+              />
+              <Text variant="bodySmall" style={styles.checkboxLabel} onPress={() => setShowPassword(!showPassword)}>
+                Show password
+              </Text>
+            </View>
+
             <Button
               mode="contained"
               onPress={handleLogin}
@@ -192,6 +204,14 @@ const styles = StyleSheet.create({
   },
   linkButton: {
     marginTop: 16,
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  checkboxLabel: {
+    color: theme.colors.muted,
   },
   errorText: {
     color: theme.colors.error,
